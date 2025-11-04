@@ -1,0 +1,19 @@
+nav {
+    width: 100vw;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 20px;
+    color: black;
+    display: flex;
+    align-items: center;
+    background-color: var(--color-background-input);
+    border-bottom: 1px solid var(--color-border);
+}
+
+nav li {
+    list-style-type: None;
+}
+
+nav .btn {
+    display: flex;
+}

@@ -1,0 +1,40 @@
+article {
+    width: 80vw;
+    height: auto;
+    text-align: left;
+    margin: 0 auto;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    border: 2px white solid;
+}
+
+article .player-card-top {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    text-align: left;
+}
+
+.player-card-top h1 {
+    border: 0px;
+    margin: 5px;
+    width: auto !important;
+}
+
+.player-card-top p {
+    margin-top: 32px;
+    margin-right: 10px;
+}
+
+.player-card-top .lane {
+    height: 30px;
+    padding: 5px;
+    font-size: 24px;
+    color: white;
+    background-color: #ea9c00;
+    border-radius: 8px
+}
+
+.player-card-top .lane p {
+    margin: 0px;
+}
