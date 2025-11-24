@@ -25,7 +25,7 @@ def convertUnixTimestamp(unix_time: int):
     
     # Convert to datetime
     dt = datetime.fromtimestamp(timestamp_s)
-    return dt.strftime("%B %d, %Y, %H:%M:%S")
+    return dt.strftime("%Y-%m-%d, %H:%M:%S")
 
 
 

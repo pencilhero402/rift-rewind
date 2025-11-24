@@ -1,3 +1,0 @@
-cd /Users/axinli/Desktop/rift-rewind
-python -m server.controllers.stats.endpoints.get_list_of_matchID_by_puuid
-

@@ -1,6 +1,10 @@
-import sqlite3
 import logging
 import os
+import mysql.connector
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 logging.basicConfig(level=logging.DEBUG,  # Adjust the level to DEBUG, INFO, etc.
                     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -10,26 +14,31 @@ logging.basicConfig(level=logging.DEBUG,  # Adjust the level to DEBUG, INFO, etc
                     ])
 
 def connect_to_database(db_file):
-    """Create and return SQLite database connection"""
     try:
-        if os.path.isdir(db_file):
-            db_file = os.path.join('../data/', db_file)
-        conn = sqlite3.connect(db_file)
+        conn = mysql.connector.connect(
+            host=os.getenv('RDS_HOST'),
+            user=os.getenv('RDS_USER'),
+            password=os.getenv('RDS_PASSWORD'),
+            port=int(os.getenv('RDS_PORT', 3306)),
+            database=db_file
+        )
         cursor = conn.cursor()
-        logging.info("Connection successful")
         return conn, cursor
-    except sqlite3.Error as e: 
-        logging.error(f"Error connecting to database: {e}")
-        return None, None
+    except mysql.connector.Error as err:
+        raise RuntimeError(f"Error connecting to database {db_file}: {err}")
+
     
 def close_connection(conn, cursor):
-    """Close cursor and connection to database"""
-    try:
+    if cursor:
         cursor.close()
+    if conn:
         conn.close()
-        logging.info("Connection closed.")
-    except sqlite3.Error as e:
-        logging.error(f"Error closing the connection: {e}")
-
-conn, cursor = connect_to_database("")
+    
+""" ----- Test database connection -----
+conn, cursor = connect_to_database('mydatabase')
+if cursor:
+    cursor.execute("SELECT version()")
+    result = cursor.fetchone()
+    print(result)
 close_connection(conn, cursor)
+"""

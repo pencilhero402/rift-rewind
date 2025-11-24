@@ -2,13 +2,32 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import '../css/SearchPlayer.css'
 import PlayersAPI from '../services/PlayersAPI';
-import MatchesAPI from '../services/MatchesAPI';
 
 const SearchPlayer = () => {
     const navigate = useNavigate();
     
     const [nameAndTag, setNameAndTag] = useState('')
     const [message, setMessage] = useState('')
+    const [player, setPlayer] = useState('')
+    const [matches, setMatches] = useState([])
+    const [playerStats, setPlayerStats] = useState([])
+
+    // 1️⃣ Fetch or create player
+    const fetchOrCreatePlayer = async (name, tag) => {
+        try {
+            const player = await PlayersAPI.upsertPlayer({
+                gameName: name,
+                tagLine: tag
+            });
+
+            console.log("Player created/updated:", player);
+            return player;
+        } catch (err) {
+            console.error("Failed to create/update player:", err);
+            setMessage("Error fetching or creating player.");
+            return null;
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,26 +39,16 @@ const SearchPlayer = () => {
         }
 
         try {
-            // 1️⃣ Try to find existing player
-            const result = await PlayersAPI.getPlayerByNameAndTag({ gameName: name, tagLine: tag });
-            if (result) {
-                MatchesAPI.createMatches( {gameName:name, tagLine: tag } )
-            }
-            setMessage(`Found existing player ${name}#${tag}`);
+            // 1️⃣ Player
+            const player = await fetchOrCreatePlayer(name, tag);
+            console.log(player)
+            setPlayer(player);
+
+            setMessage(`Player data ready: ${name}#${tag}`);
             navigate(`player/${name}/${tag}`);
         } catch (error) {
-            console.warn("Player not found, attempting to create new one...");
-            console.error(error);
-
-            // 2️⃣ Fallback: create player if not found
-            try {
-                const createResult = await PlayersAPI.createPlayer({ gameName: name, tagLine: tag });
-                setMessage(`Created new player ${name}#${tag}`);
-                navigate(`player/${name}/${tag}`);
-            } catch (createError) {
-                console.error("Failed to create player:", createError);
-                setMessage("Failed to find or create player.");
-            }
+            console.error("Unexpected error:", error);
+            setMessage("An unexpected error occurred.");
         }
     };
 

@@ -13,6 +13,7 @@ article .player-card-top {
     justify-content: left;
     align-items: center;
     text-align: left;
+    color: white;
 }
 
 .player-card-top h1 {
@@ -29,12 +30,94 @@ article .player-card-top {
 .player-card-top .lane {
     height: 30px;
     padding: 5px;
-    font-size: 24px;
+    font-size: 16px;
     color: white;
     background-color: #ea9c00;
-    border-radius: 8px
+    border-radius: 8px;
 }
 
 .player-card-top .lane p {
     margin: 0px;
+}
+
+.summoner-icon-image {
+    width: 100px;
+    height: 100px;
+    color: white;
+}
+
+.player-card-middle {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    color: white;
+}
+
+.loading-champion-image {
+    width: 308px;
+    height: 560px;
+}
+
+.player-match-stats {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.rank-row {
+    border: 2px solid white;
+    background-color: gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rank-row .rank-icon {
+    object-fit: cover;
+    display: block;
+}
+
+.winrate-row {
+    border: 2px solid white;
+    background-color: gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.winrate-donut-chart {
+    width: 150px;
+    height: 150px;
+    display: block;
+}
+
+.champions-row {
+    border: 2px solid white;
+    background-color: gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.champion-icons-container {
+    display: grid;
+    grid-template-rows: 100px 100px;    /* 2 rows, each 100px tall */
+    grid-template-columns: 1fr 1fr 1fr; /* 3 columns, each takes equal space */
+    gap: 10px;
+    padding: 10px;
+}
+
+.best-champion-icon {
+    width: 80px;
+    height: 80px;
+    border: 1px solid blue;
+    display: block;
+}
+
+.champion-icon {
+    border: 1px solid white;
+    width: 80x;
+    height: 80px;
+    display: block;
 }

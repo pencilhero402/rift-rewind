@@ -1,0 +1,158 @@
+.circle {
+    background-color: transparent;  /* Circle color */
+    border-radius: 50%;      /* Makes it circular */
+    display: inline-block;   /* Optional for inline placement */
+}
+
+.circle.extra.small {
+    width: 35px;
+    height: 35px;
+    padding: 7.5px;
+}
+
+.circle.small {
+    width: 50px;
+    height: 50px;
+}
+
+.circle.medium {
+    width: 100px;
+    height: 100px;
+}
+
+.square {
+    background-color: transparent;
+    display: inline-block;
+    border: 1px solid gray;
+}
+
+.square.extra.small {
+    width: 20px;
+    height: 20px;
+    border: none;
+}
+
+.square.small {
+    width: 40px;
+    height: 40px;
+}
+
+.match-history-container {
+}
+
+.match-container {
+}
+
+.match-day-details {
+}
+
+/* Background blue/red on win/loss 
+Blue:   #28334e
+Red:    #59343b
+*/
+.match-card {
+    margin: 4px 0;
+    padding: 6px 10px;
+    border-radius: 4px;
+    color: white;
+    background: #333; /* default background */
+    display: flex;
+    flex-direction: row;
+    height: 150px;
+}
+
+/* Optional: additional classes for win/loss */
+.match-card.win {
+    background-color: #28334e; /* blue for win */
+}
+
+.match-card.lose {
+    background-color: #59343b; /* red for loss */
+}
+
+.match-card-info {
+    border-right: 1px solid white;
+    width: 150px;
+    text-align: center;
+    padding: 12px;
+}
+
+.match-card-info-lane {
+    border-bottom: 1px solid white;
+}
+
+.match-card-info-time {
+
+}
+
+.match-card-player-container {
+    width: 70%;
+    height: 100%;
+    border-right: 1px solid white;
+}
+
+.match-stats-container {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid white;
+    height: 70%;
+}
+
+.summoner-spells-container {
+    display: grid;
+    grid-template-rows: 50px 50px;    
+    grid-template-columns: 1fr; 
+}
+
+.summoner-runes-container {
+    display: grid;
+    grid-template-rows: 50px 50px;    
+    grid-template-columns: 1fr;
+    align-items: center;
+    justify-content: center;
+}
+
+.player-kda-container {
+    display: grid;
+    grid-template-rows: 50px 50px;    
+    grid-template-columns: 1fr; 
+}
+
+.item-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 80px;
+}   
+
+.match-card-match-container {
+    display: flex;
+    flex-direction: row;
+    font-size: 10px;
+    padding: 5px;
+}
+
+.player-row {
+    border: 1px solid white;
+}
+
+.team1-container {
+    max-width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.team2-container {
+    max-width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.player-name-and-icon {
+    height: 20px;
+    display: flex;
+    text-align: center;
+    align-items: center;
+}
