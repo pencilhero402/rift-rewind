@@ -1,4 +1,4 @@
-const API_URL = 'https://4l4gk471mh.execute-api.us-east-1.amazonaws.com/prod/match-history'
+const API_URL = import.meta.env.VITE_MATCH_HISTORY_API_PATH;
 const MatchesAPI = {
     getMatchHistoryOfPlayer: async (playerData) => {
         try {

@@ -1,6 +1,6 @@
-const API_URL = 'https://4l4gk471mh.execute-api.us-east-1.amazonaws.com/prod/player/stat'
+const API_URL = import.meta.env.VITE_PLAYER_STATS_API_PATH;
 const PlayerStatsAPI = {
-    createOrUpdatePlayerStats: async(playerData) => {
+    createPlayerStats: async(playerData) => {
         try {
             const puuid = playerData.puuid.trim()
 
