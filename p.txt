@@ -1,0 +1,177 @@
+WITH player_matches AS (
+    SELECT 
+        md.matchId,
+        CAST(JSON_UNQUOTE(JSON_EXTRACT(md.matchData, '$.info.gameStartTimestamp')) AS UNSIGNED) AS gameStartTimestamp,
+        CAST(JSON_UNQUOTE(JSON_EXTRACT(md.matchData, '$.info.gameDuration')) AS UNSIGNED) AS gameDuration,
+        pt.summonerName,
+        pt.riotIdTagline,
+        pt.championName,
+        pt.kda
+    FROM MatchData md
+    JOIN JSON_TABLE(
+        md.matchData, 
+        '$.info.participants[*]' COLUMNS (
+            summonerName VARCHAR(255) PATH '$.riotIdGameName',
+            riotIdTagline VARCHAR(10) PATH '$.riotIdTagline',
+            championName VARCHAR(100) PATH '$.championName',
+            kda FLOAT PATH '$.challenges.kda'
+        )
+    ) AS pt
+    WHERE pt.summonerName = %s
+      AND pt.riotIdTagline = %s
+),
+player_percentiles AS (
+    SELECT
+        *,
+        PERCENT_RANK() OVER (
+            PARTITION BY championName
+            ORDER BY kda DESC
+        ) AS kda_percentile
+    FROM player_matches
+)
+SELECT 
+    md.matchId,
+    CAST(JSON_UNQUOTE(JSON_EXTRACT(md.matchData, '$.info.gameStartTimestamp')) AS UNSIGNED) AS gameStartTimestamp,
+    CAST(JSON_UNQUOTE(JSON_EXTRACT(md.matchData, '$.info.gameDuration')) AS UNSIGNED) AS gameDuration,
+    GROUP_CONCAT(pt.summonerName) AS summonerNames,
+    GROUP_CONCAT(pt.championName) AS championNames,
+    GROUP_CONCAT(CAST(pt.win AS UNSIGNED)) AS outcomes,
+    GROUP_CONCAT(pt.lane) AS lanes,
+    GROUP_CONCAT(pt.role) AS roles,
+    GROUP_CONCAT(pt.summoner1Id) AS summonerSpells1,
+    GROUP_CONCAT(pt.summoner2Id) AS summonerSpells2,
+    JSON_ARRAYAGG(JSON_EXTRACT(pt.perks, '$.styles[0].style')) AS primaryStyles,
+    JSON_ARRAYAGG(JSON_EXTRACT(pt.perks, '$.styles[0].selections[0].perk')) AS primaryKeystones,
+    JSON_ARRAYAGG(JSON_EXTRACT(pt.perks, '$.styles[1].style')) AS secondaryStyles,
+    GROUP_CONCAT(pt.kills) AS kills,
+    GROUP_CONCAT(pt.deaths) AS deaths,
+    GROUP_CONCAT(pt.assists) AS assists,
+    GROUP_CONCAT(pt.kda) AS kda,
+    pp.kda_percentile AS player_kda_percentile,
+    GROUP_CONCAT(pt.item0) AS item0,
+    GROUP_CONCAT(pt.item1) AS item1,
+    GROUP_CONCAT(pt.item2) AS item2,
+    GROUP_CONCAT(pt.item3) AS item3,
+    GROUP_CONCAT(pt.item4) AS item4,
+    GROUP_CONCAT(pt.item5) AS item5,
+    GROUP_CONCAT(pt.item6) AS item6,
+    GROUP_CONCAT(pt.teamId) AS teamIds
+FROM MatchData md
+JOIN JSON_TABLE(
+    md.matchData, 
+    '$.info.participants[*]' COLUMNS (
+        puuid VARCHAR(255) PATH '$.puuid',
+        summonerName VARCHAR(255) PATH '$.riotIdGameName',
+        riotIdTagline VARCHAR(10) PATH '$.riotIdTagline',
+        win BOOLEAN PATH '$.win',
+        championName VARCHAR(100) PATH '$.championName',
+        lane VARCHAR(20) PATH '$.lane',
+        role VARCHAR(20) PATH '$.role',
+        summoner1Id INT PATH '$.summoner1Id',
+        summoner2Id INT PATH '$.summoner2Id',
+        perks JSON PATH '$.perks',
+        kills INT PATH '$.kills',
+        deaths INT PATH '$.deaths',
+        assists INT PATH '$.assists',
+        kda FLOAT PATH '$.challenges.kda',
+        item0 INT PATH '$.item0',
+        item1 INT PATH '$.item1',
+        item2 INT PATH '$.item2',
+        item3 INT PATH '$.item3',
+        item4 INT PATH '$.item4',
+        item5 INT PATH '$.item5',
+        item6 INT PATH '$.item6',
+        teamId INT PATH '$.teamId'
+    )
+) AS pt
+LEFT JOIN player_percentiles pp 
+    ON md.matchId = pp.matchId
+WHERE md.matchId IN (
+    SELECT md2.matchId
+    FROM MatchData md2
+    JOIN JSON_TABLE(
+        md2.matchData,
+        '$.info.participants[*]' COLUMNS (
+            summonerName VARCHAR(255) PATH '$.riotIdGameName',
+            riotIdTagline VARCHAR(10) PATH '$.riotIdTagline'
+        )
+    ) AS p
+    WHERE p.summonerName = %s AND p.riotIdTagline = %s
+)
+GROUP BY md.matchId, gameStartTimestamp, gameDuration, pp.kda_percentile
+ORDER BY gameStartTimestamp DESC;
+
+
+
+
+SELECT 
+                        md.matchId,
+                        CAST(JSON_UNQUOTE(JSON_EXTRACT(md.matchData, '$.info.gameStartTimestamp')) AS UNSIGNED) AS gameStartTimestamp,
+                        CAST(JSON_UNQUOTE(JSON_EXTRACT(md.matchData, '$.info.gameDuration')) AS UNSIGNED) AS gameDuration,
+                        GROUP_CONCAT(pt.summonerName) AS summonerNames,
+                        GROUP_CONCAT(pt.championName) AS championNames,
+                        GROUP_CONCAT(CAST(pt.win AS UNSIGNED)) AS outcomes,
+                        GROUP_CONCAT(pt.lane) AS lanes,
+                        GROUP_CONCAT(pt.role) AS roles,
+                        GROUP_CONCAT(pt.summoner1Id) AS summonerSpells1,
+                        GROUP_CONCAT(pt.summoner2Id) AS summonerSpells2,
+                        JSON_ARRAYAGG(JSON_EXTRACT(pt.perks, '$.styles[0].style')) AS primaryStyles,
+                        JSON_ARRAYAGG(JSON_EXTRACT(pt.perks, '$.styles[0].selections[0].perk')) AS primaryKeystones,
+                        JSON_ARRAYAGG(JSON_EXTRACT(pt.perks, '$.styles[1].style')) AS secondaryStyles,
+
+                        GROUP_CONCAT(pt.kills) AS kills,
+                        GROUP_CONCAT(pt.deaths) AS deaths,
+                        GROUP_CONCAT(pt.assists) AS assists,
+                        GROUP_CONCAT(pt.kda) AS kda,
+
+                        GROUP_CONCAT(pt.item0) AS item0,
+                        GROUP_CONCAT(pt.item1) AS item1,
+                        GROUP_CONCAT(pt.item2) AS item2,
+                        GROUP_CONCAT(pt.item3) AS item3,
+                        GROUP_CONCAT(pt.item4) AS item4,
+                        GROUP_CONCAT(pt.item5) AS item5,
+                        GROUP_CONCAT(pt.item6) AS item6,
+
+                        GROUP_CONCAT(pt.teamId) AS teamIds
+
+                    FROM MatchData md
+                    JOIN JSON_TABLE(
+                        md.matchData, 
+                        '$.info.participants[*]' COLUMNS (
+                            puuid VARCHAR(255) PATH '$.puuid',
+                            summonerName VARCHAR(255) PATH '$.riotIdGameName',
+                            riotIdTagline VARCHAR(10) PATH '$.riotIdTagline',
+                            win BOOLEAN PATH '$.win',
+                            championName VARCHAR(100) PATH '$.championName',
+                            lane VARCHAR(20) PATH '$.lane',
+                            role VARCHAR(20) PATH '$.role',
+                            summoner1Id INT PATH '$.summoner1Id',
+                            summoner2Id INT PATH '$.summoner2Id',
+                            perks JSON PATH '$.perks',
+                            kills INT PATH '$.kills',
+                            deaths INT PATH '$.deaths',
+                            assists INT PATH '$.assists',
+                            kda FLOAT PATH '$.challenges.kda',
+                            item0 INT PATH '$.item0',
+                            item1 INT PATH '$.item1',
+                            item2 INT PATH '$.item2',
+                            item3 INT PATH '$.item3',
+                            item4 INT PATH '$.item4',
+                            item5 INT PATH '$.item5',
+                            item6 INT PATH '$.item6',
+                            teamId INT PATH '$.teamId'
+                        )
+                    ) AS pt
+                    WHERE md.matchId IN (
+                        SELECT md2.matchId
+                        FROM MatchData md2
+                        JOIN JSON_TABLE(
+                            md2.matchData,
+                            '$.info.participants[*]' COLUMNS (
+                                summonerName VARCHAR(255) PATH '$.riotIdGameName',
+                                riotIdTagline VARCHAR(10) PATH '$.riotIdTagline'
+                            )
+                        ) AS p
+                        WHERE p.summonerName = "Plazbo" AND p.riotIdTagline = "NA1"
+                    )
+                    GROUP BY md.matchId, gameStartTimestamp, gameDuration;

@@ -58,7 +58,7 @@ Red:    #59343b
     background: #333; /* default background */
     display: flex;
     flex-direction: row;
-    height: 150px;
+    height: 200px;
 }
 
 /* Optional: additional classes for win/loss */
