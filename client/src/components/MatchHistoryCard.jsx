@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import '../css/MatchHistoryCard.css';
+import StarRating from './StarRating';
 
 const MatchHistoryCard = ( { matchHistory }) => {
     const { gameName } = useParams();
@@ -81,9 +82,26 @@ const MatchHistoryCard = ( { matchHistory }) => {
                                         const participants = match.participants
                                         const team1 = participants.filter(p => p.teamId === 100);
                                         const team2 = participants.filter(p => p.teamId === 200);
+                                        
+                                        // Average of each stats performance
+                                        const aggressionStats = getPlayerProperty(match, gameName, "aggression_percentile");
+                                        const aggressionValues = Object.values(aggressionStats);
+                                        const averageAggressionPercentile = aggressionValues.reduce((acc, val) => acc + val, 0) / aggressionValues.length;
 
-                                        console.log(team1)
-                                        console.log(team2)
+                                        const incomeStats = getPlayerProperty(match, gameName, "income_percentile");
+                                        const incomeValues = Object.values(incomeStats);
+                                        const averageIncomePercentile = incomeValues.reduce((acc, val) => acc + val, 0) / incomeValues.length;
+
+                                        const visionStats = getPlayerProperty(match, gameName, "vision_percentile");
+                                        const visionValues = Object.values(visionStats);
+                                        const averageVisionPercentile = visionValues.reduce((acc, val) => acc + val, 0) / visionValues.length;
+
+                                        const objectiveStats = getPlayerProperty(match, gameName, "objective_percentile");
+                                        const objectiveValues = Object.values(objectiveStats);
+                                        const averageObjectivePercentile = objectiveValues.reduce((acc, val) => acc + val, 0) / objectiveValues.length;
+                                        
+                                        const overallValues = [averageAggressionPercentile, averageIncomePercentile, averageVisionPercentile, averageObjectivePercentile]
+                                        const averageOverallPercentile = overallValues.reduce((acc, val) => acc + val, 0) / overallValues.length;
 
                                         return (
                                             <div
@@ -157,6 +175,53 @@ const MatchHistoryCard = ( { matchHistory }) => {
                                                                 <span style={{ color: "white" }}>{playerKDA.kills}/</span>
                                                                 <span style={{ color: "red" }}>{playerKDA.deaths}</span>
                                                                 <span style={{ color: "white" }}>/{playerKDA.assists}</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="performance-container">
+                                                            <div className="left-column">
+                                                                <div className="stat-performance-container">
+                                                                    <img 
+                                                                        src="/assets/performanceIcon/Aggression.png"
+                                                                        className="circle extra small"/>
+                                                                    :
+                                                                    <StarRating averagePercentile={ averageAggressionPercentile } />
+                                                                </div>
+
+                                                                <div className="stat-performance-container">
+                                                                    <img 
+                                                                        src="/assets/performanceIcon/Income.png"
+                                                                        className="circle extra small"/>
+                                                                        :
+                                                                    <StarRating averagePercentile={ averageIncomePercentile } />
+                                                                </div>
+
+                                                                <div className="stat-performance-container">
+                                                                    <img 
+                                                                        src="/assets/performanceIcon/Vision.png"
+                                                                        className="circle extra small"/>
+                                                                        :
+                                                                    <StarRating averagePercentile={ averageVisionPercentile } />
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div className="right-column">
+                                                                <div className="stat-performance-container">
+                                                                    <p>🐉:</p>
+                                                                    <StarRating averagePercentile={ averageObjectivePercentile } />
+                                                                </div>
+
+                                                                <div className="stat-performance-container">
+                                                                    <img
+                                                                        src="/assets/performanceIcon/Early Game.png"
+                                                                        className="circle extra small"/>
+                                                                        :
+                                                                </div>
+
+                                                                <div className="stat-performance-container">
+                                                                    <p>Overall: </p>
+                                                                    <StarRating averagePercentile={ averageOverallPercentile }/>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>

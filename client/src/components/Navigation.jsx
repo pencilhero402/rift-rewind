@@ -12,10 +12,8 @@ const Navigation = () => {
                 </h1>
             </ul>
             <ul className="btn">
-                <li><Link to='/' role='button'>Teams</Link></li>
                 <li><Link to='/login' role='button'>Login</Link></li>
             </ul>
-            
         </nav>
     )
 }

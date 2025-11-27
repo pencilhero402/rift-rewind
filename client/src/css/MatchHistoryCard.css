@@ -95,7 +95,7 @@ Red:    #59343b
     display: flex;
     flex-direction: row;
     border-bottom: 1px solid white;
-    height: 70%;
+    height: 80%;
 }
 
 .summoner-spells-container {
@@ -116,6 +116,28 @@ Red:    #59343b
     display: grid;
     grid-template-rows: 50px 50px;    
     grid-template-columns: 1fr; 
+}
+
+.performance-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-left: auto;
+    padding: 12px;
+}
+
+.left-column {
+    padding: 0px;
+}
+
+.right-column {
+    padding: 0px;
+}
+
+.stat-performance-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .item-container {
