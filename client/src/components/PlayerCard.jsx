@@ -36,24 +36,26 @@ const PlayerCard = ( {gameName, tagLine, puuid, summonerIconId, summonerLevel, l
     } catch (e) {
         console.warn("Invalid champion JSON:", champions);
     }
+    
 
     const sortedChampions = Object.entries(championObj)
-        .sort((a, b) => b[1] - a[1]); // sort descending
+        .sort((a, b) => b[1] - a[1]);
 
-    const [topChampionName, topChampionValue] = sortedChampions[0]; // Display top champion loading in player card
-    const myChampionNames = sortedChampions.map(entry => entry[0]);
-    const myChampionValues = sortedChampions.map(entry => entry[1]);
+    const [topChampionName, topChampionValue] = sortedChampions.length > 0 ? sortedChampions[0] : [null, null]; // Fallback to null if no champions exist
+    const myChampionNames = sortedChampions.length > 0 ? sortedChampions.map(entry => entry[0]) : []; // Prevent errors if empty
+    const myChampionValues = sortedChampions.length > 0 ? sortedChampions.map(entry => entry[1]) : [];
 
-    console.log(`Player's champions ${myChampionNames.length}: ${myChampionNames}`)
-
-    // Loads a random image of player's top champion
     useEffect(() => {
-        if (!loadingChampions || !topChampionName) return;
-        const image = getRandomChampionImage(topChampionName);
-        setRandomChampion(image);
-    }, [loadingChampions, topChampionName]);
+        if (!topChampionName) return; 
 
-    console.log(`YOUR RANK: ${tier.toLowerCase()}`)
+        const image = getRandomChampionImage(topChampionName);
+        if (image) {
+            setRandomChampion(image); 
+        } else {
+            setRandomChampion("/assets/champion/loading/Aatrox_0.jpg"); // Default image if no image found
+        }
+    }, [topChampionName, loadingChampions]); // Trigger this effect when topChampionName or loadingChampions changes
+
     return (
         <article>
             <div className="cardBorder">
@@ -76,7 +78,7 @@ const PlayerCard = ( {gameName, tagLine, puuid, summonerIconId, summonerLevel, l
 
                 <div className="player-card-middle">
                     <img
-                        src={randomChampion}
+                        src={randomChampion || "/assets/champion/loading/Aatrox_0.jpg"}
                         alt="Best Champion Icon"
                         className="loading-champion-image"
                         onError={(e) => {

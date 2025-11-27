@@ -45,7 +45,7 @@ const SearchPlayer = () => {
             setPlayer(player);
 
             setMessage(`Player data ready: ${name}#${tag}`);
-            navigate(`player/${name}/${tag}`);
+            navigate(`player/${name}/${tag}`, { state: { player } });
         } catch (error) {
             console.error("Unexpected error:", error);
             setMessage("An unexpected error occurred.");

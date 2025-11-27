@@ -13,7 +13,6 @@ const MatchesAPI = {
             return data
         } catch(error) {
             console.error(`Error fetching Player with Riot ID: ${playerData.gameName}#${playerData.tagLine}`)
-            //throw(error)
         }
     },
 };
