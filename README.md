@@ -12,7 +12,7 @@ Rift Rewind is a tracker for League of Legends player performance and match hist
 
 Frontend: React, HTML/CSS, Javascript
 
-Backend: NodeJS, Express, AWS API Gateway, AWS RDS MySQL, AWS Lambda
+Backend: Python, AWS API Gateway, AWS RDS MySQL, AWS Lambda
 
 ## Features
 
