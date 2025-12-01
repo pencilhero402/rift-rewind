@@ -28,3 +28,4 @@ dist-ssr
 *.sln
 *.sw?
 /client/public/assets
+venv/
