@@ -48,11 +48,7 @@ These features are available to all users to help them browse and explore player
 
 Match History Search — look up any summoner and retrieve their latest matches
 
-Match Timeline Viewer — inspect kills, CS, lane interactions, gold swings, and more
-
 Player Statistics Dashboard — visualize champion pool, roles, winrates, and trends
-
-AI Match Insights (Bedrock) — the system analyzes matches and summarizes key takeaways
 
 Performance Breakdown — lane matchup scoring, early-game CS diff, objective activity
 
